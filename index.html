@@ -149,5 +149,24 @@
   observer.observe(document.body);
 </script>
 
+  <script>
+  function sendHeight() {
+    window.parent.postMessage({
+      type: 'iframe-height',
+      height: document.body.scrollHeight
+    }, '*');
+  }
+  window.addEventListener('load', sendHeight);
+  window.addEventListener('resize', sendHeight);
+  var retryCount = 0;
+  var retryInterval = setInterval(function() {
+    sendHeight();
+    retryCount++;
+    if (retryCount >= 6) clearInterval(retryInterval);
+  }, 500);
+  var observer = new ResizeObserver(sendHeight);
+  observer.observe(document.body);
+</script>
+
 </body>
 </html>
